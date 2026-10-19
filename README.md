@@ -55,6 +55,8 @@
 ├── README.md
 ├── DATASET.md
 ├── requirements.txt
+├── figure_sequential_deviation.png
+├── figure_participant_comparison.png
 ├── src/
 │   ├── common.py
 │   ├── extract_pose.py
@@ -82,6 +84,22 @@ Evaluation の基準閾値超過フレーム割合は以下の通りでした。
 | NonFall10 | Evaluation | 9.98% |
 
 また、3 名の高齢者を比較したところ、特徴量の中心値だけでなく試行間のばらつきにも個人差が確認されました。この結果は「全員に同一の基準を適用するのではなく、本人の通常状態を基準に変化を見る」という研究方針を検討する根拠の一つとして扱っています。
+
+## Visual results
+
+### Participant A: individual-baseline deviation
+
+![Participant A individual-baseline deviation](figure_sequential_deviation.png)
+
+各棒は、各試行において Participant A の個人別 P95 閾値を超えたフレームの割合を示しています。  
+この割合は転倒確率ではなく、本人の Baseline から比較的大きく逸脱したフレームの割合です。
+
+### Comparison across three participants
+
+![Comparison of motion features across three participants](figure_participant_comparison.png)
+
+3 名の高齢者について、8 種類の特徴量の試行中央値と IQR をロバスト標準化して比較したものです。  
+特徴量の中心値だけでなく試行間のばらつきにも個人差があることを確認しました。横軸の値そのものは転倒リスクを表しません。
 
 ## How to run
 
