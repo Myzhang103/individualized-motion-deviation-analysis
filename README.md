@@ -11,6 +11,18 @@
 
 その後、「転倒直前の特徴」だけでなく、高齢者本人の普段の状態からの変化を捉える必要があると考え、MUVIM の高齢者 ADL データを用いた個人別評価へ研究を発展させています。
 
+## What I implemented
+
+- MediaPipe Pose を用いた RGB 映像からの骨格ランドマーク抽出
+- Pose 未検出フレームを考慮した連続フレーム処理
+- 8 種類の動作特徴量の設計・実装
+- Median / MAD による個人別 Baseline の構築
+- 標準化逸脱度と Deviation Score の算出
+- P95 を用いた探索的な大きな逸脱の抽出
+- EWMA による複数試行の逐次評価
+- Feature Contribution による特徴量別の逸脱要因確認
+- 3 名の高齢者における日常動作特徴量の個人差比較
+
 ## Pipeline
 
 1. RGB frames → MediaPipe Pose による 33 点の骨格ランドマーク抽出
@@ -59,7 +71,15 @@
 
 Participant A の試作では、NonFall2–5 を Baseline、NonFall6–10 を Evaluation として使用しました。
 Baseline の Deviation Score 分布から得た P95 は **5.61** でした。
-Evaluation の基準閾値超過フレーム割合は、NonFall6–10 でそれぞれ **11.10%, 3.26%, 9.38%, 9.72%, 9.98%** でした。
+Evaluation の基準閾値超過フレーム割合は以下の通りでした。
+
+| Trial | Phase | Threshold exceedance rate |
+|---|---|---:|
+| NonFall6 | Evaluation | 11.10% |
+| NonFall7 | Evaluation | 3.26% |
+| NonFall8 | Evaluation | 9.38% |
+| NonFall9 | Evaluation | 9.72% |
+| NonFall10 | Evaluation | 9.98% |
 
 また、3 名の高齢者を比較したところ、特徴量の中心値だけでなく試行間のばらつきにも個人差が確認されました。この結果は「全員に同一の基準を適用するのではなく、本人の通常状態を基準に変化を見る」という研究方針を検討する根拠の一つとして扱っています。
 
