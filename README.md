@@ -3,9 +3,9 @@
 大学院研究で作成した、高齢者の日常動作を骨格情報から解析する Python プロジェクトです。
 一律の基準だけで評価するのではなく、**本人の日常動作を個人別 Baseline とし、本人の通常状態からの変化を定量化する**ことを目的としています。
 
-> **Important:** 現在の Deviation Score は「転倒確率」を表すものではありません。本人の通常状態からの個人内変化を表す探索的な指標であり、転倒リスクとの関係は現在検証中です。
+> **Note:** 現在の Deviation Score は転倒確率ではなく、本人の通常状態からどの程度変化したかを見るための指標です。転倒リスクとの関係は今後の検証課題です。
 
-このリポジトリは就職活動用に整理した研究ポートフォリオ版です。MUVIM の原動画・画像およびフレーム単位の骨格座標データは公開していません。データの扱いについては [DATASET.md](DATASET.md) を参照してください。
+このリポジトリは、大学院で進めている研究の中から、就職活動用にコードと結果を整理したものです。MUVIM の原動画・画像およびフレーム単位の骨格座標データは公開していません。データの扱いについては [DATASET.md](DATASET.md) を参照してください。
 
 ## Background
 
@@ -94,14 +94,14 @@ Evaluation の基準閾値超過フレーム割合は以下の通りでした。
 ![Participant A individual-baseline deviation](figure_sequential_deviation.png)
 
 各棒は、各試行において Participant A の個人別 P95 閾値を超えたフレームの割合を示しています。  
-この割合は転倒確率ではなく、本人の Baseline から比較的大きく逸脱したフレームの割合です。
+この割合は、本人の Baseline から比較的大きく逸脱したフレームの割合を示しています。
 
 ### Comparison across three participants
 
 ![Comparison of motion features across three participants](figure_participant_comparison.png)
 
 3 名の高齢者について、8 種類の特徴量の試行中央値と IQR をロバスト標準化して比較したものです。  
-特徴量の中心値だけでなく試行間のばらつきにも個人差があることを確認しました。横軸の値そのものは転倒リスクを表しません。
+特徴量の中心値だけでなく、試行間のばらつきにも個人差があることを確認しました。
 
 ## How to run
 
@@ -157,12 +157,11 @@ python src/compare_participants.py \
 
 ## Current limitations and next steps
 
-- Deviation from an individual baseline is **not yet a validated fall-risk threshold**.
-- Acceleration can amplify pose-estimation noise; smoothing and feature validity need further evaluation.
-- `body_turn_rate` is currently a frame-to-frame angular change and will be reconsidered using a fixed time window / angular velocity.
-- Image-plane ankle distance can be affected by camera/body orientation.
-- Pose detection success does not guarantee landmark accuracy; high-deviation frames should be checked against the source video.
-- The relationship between these within-person changes and established fall-risk indicators is an ongoing research question.
+- 個人内の逸脱と実際の転倒リスクとの関係は、今後さらに検証が必要です。
+- 加速度は Pose 推定ノイズの影響を受けやすいため、平滑化や特徴量の見直しを検討しています。
+- `body_turn_rate` は現在フレーム間の角度差を使っており、今後は一定時間幅での変化量も検討します。
+- 足関節間距離などの画像上の特徴量は、カメラ方向や身体の向きの影響を受ける可能性があります。
+- Pose の検出成功だけで精度を保証できないため、必要に応じて元映像との照合も行います。
 
 ## Technologies
 
