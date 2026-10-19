@@ -5,6 +5,8 @@
 
 > **Important:** 現在の Deviation Score は「転倒確率」を表すものではありません。本人の通常状態からの個人内変化を表す探索的な指標であり、転倒リスクとの関係は現在検証中です。
 
+このリポジトリは就職活動用に整理した研究ポートフォリオ版です。MUVIM の原動画・画像およびフレーム単位の骨格座標データは公開していません。データの扱いについては [DATASET.md](DATASET.md) を参照してください。
+
 ## Background
 
 前期研究では UR Fall Detection Dataset を用いて、骨格特徴量から Random Forest による転倒・日常動作分類を行いました。5-fold cross-validation の平均精度は **77.1% ± 17.7%** で、SHAP / LIME を用いてモデルの判断根拠も分析し、日本人間工学会で発表しました。
@@ -102,6 +104,8 @@ Evaluation の基準閾値超過フレーム割合は以下の通りでした。
 特徴量の中心値だけでなく試行間のばらつきにも個人差があることを確認しました。横軸の値そのものは転倒リスクを表しません。
 
 ## How to run
+
+**Environment:** Python 3.10+
 
 ### 1. Install dependencies
 
