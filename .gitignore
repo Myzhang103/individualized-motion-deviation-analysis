@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+
+# Raw/restricted datasets and frame-level derived data
+data/
+raw_data/
+*_pose.csv
+NonFall*/
+*.avi
+*.mp4
+*.task
