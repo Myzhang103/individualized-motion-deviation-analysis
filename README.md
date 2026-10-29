@@ -115,6 +115,20 @@ Subsequent research checks highlighted several points that are important when in
 
 These findings shifted the research emphasis from simply producing a risk score toward first verifying **what is actually being measured and how reliably it can be interpreted**.
 
+## Current research direction (October 2026)
+
+The research is now organized around three separate questions:
+
+1. **Measurement validity:** Do RGB / pose-derived features represent the intended physical motion, under which viewing and missing-data conditions?
+2. **Within-person comparison:** After defining comparable activities and reliable measurements, can changes from an individual's own reference be quantified?
+3. **Prospective relevance:** Do those changes improve evaluation of future falls in data with appropriately linked follow-up outcomes?
+
+A subsequent inspection of selected MUVIM video segments also found that pose landmarks could be more available during sitting than during short movement segments. **Pose availability alone is therefore not evidence of valid gait measurement.** These exploratory windows were not independently validated gait labels.
+
+**Proposed next validation (not yet performed):** Start with a small self-pilot, recording a simple movement (for example, lateral trunk inclination) using a fixed RGB camera and Xsens DOT inertial sensor(s) at the same time. First verify timestamps, synchronization, sensor orientation, coordinate axes, and units. Then compare genuinely corresponding image-plane and inertial measurements, with error and missing-data reporting. An RGB shoulder-line angle must **not** be equated directly with 3D yaw without the appropriate measurement definition and calibration.
+
+This proposed simultaneous measurement is a **plan**, not a completed experiment or an implemented feature of this public repository. It is intended to test measurement validity, not directly to validate future fall-risk prediction.
+
 ## What this project demonstrates
 
 - Python-based data processing and analysis
