@@ -1,236 +1,85 @@
-# Individualized Motion Deviation Analysis for Older Adults
+# Analyzing Motion Changes from RGB Pose Data
 
-[日本語版 / Japanese](README_JA.md)
+[日本語版 README](README_JA.md)
 
-A research-oriented Python project for analyzing **within-person changes in daily motion** from RGB video and pose landmarks.
+I built this Python project during my master's research at Hosei University. It extracts pose landmarks from RGB images, calculates motion features, and compares them with a reference distribution of daily activities. My longer-term research goal is to understand whether changes in everyday movement can contribute to fall-risk assessment.
 
-The project explores how a person's own usual motion patterns can be used as an individualized reference rather than applying one fixed threshold to everyone.
+**This repository is an early analysis prototype, not a validated fall-risk prediction system.**
 
-> **Research status:** This repository contains an exploratory prototype. Its deviation scores are **not fall probabilities**, and the code is **not a clinical fall-risk prediction system**.
+## Why I built it
 
-## Overview
+In an earlier study, I used skeletal features and Random Forest to distinguish fall and non-fall video segments (5-fold cross-validation accuracy: **77.1% ± 17.7%**). I also examined the model's decisions with SHAP and LIME and presented that work at the [67th Annual Meeting of the Japan Ergonomics Society](https://pub.confit.atlas.jp/ja/event/jes67/presentation/1B2-03).
 
-My earlier work used the UR Fall Detection Dataset to classify fall / non-fall video segments from pose-derived features with a Random Forest model. In 5-fold cross-validation, the mean accuracy was **77.1% ± 17.7%**. I also used SHAP and LIME to inspect model behavior and presented this work at the 67th Annual Meeting of the Japan Ergonomics Society.
+That work raised a question: recognizing motion immediately around a fall is different from assessing how a person's usual movement may be changing. I therefore started testing a reference-based approach using daily-activity videos from the MUVIM dataset.
 
-The research then shifted from short-term fall-event classification toward a different question:
+## What I implemented
 
-**Can changes in a person's own daily motion be quantified before interpreting them as fall risk?**
+The public code covers four steps:
 
-For this purpose, I developed a prototype pipeline using MUVIM RGB daily-activity data, MediaPipe Pose, image-space motion features, robust statistics, and sequential deviation analysis.
+| Step | Implementation |
+| --- | --- |
+| Pose extraction | [`extract_pose.py`](src/extract_pose.py) extracts 33 MediaPipe landmarks from RGB frames and retains original frame numbers, including failed detections. |
+| Motion features | [`extract_features.py`](src/extract_features.py) calculates eight image-space features without bridging gaps between detected frames. |
+| Reference and deviation | [`analyze_individual_deviation.py`](src/analyze_individual_deviation.py) uses Median/MAD to form a reference and computes standardized deviations, an exploratory threshold, EWMA, and feature-level summaries. |
+| Trial-group comparison | [`compare_participants.py`](src/compare_participants.py) summarizes feature distributions for user-specified groups of trials. |
 
-## What this repository contains
+The implementation uses **Python, NumPy, pandas, OpenCV, and MediaPipe Pose**. The Random Forest and SHAP/LIME work described above was part of an earlier study; its code is not included in this repository.
 
-- RGB-frame pose extraction with **MediaPipe Pose**
-- Handling of missing pose frames while preserving original frame numbers
-- Eight image-space motion features
-- Individualized baselines using **Median / MAD**
-- Standardized deviation and a combined Deviation Score
-- Exploratory percentile-based deviation screening
-- EWMA-based sequential aggregation across trials
-- Feature-level contribution summaries
-- Exploratory comparison across provisional trial groups
-- Small aggregate result files and figures
+## What I found when I checked the measurements
 
-### Repository scope
+My first scores included large changes in shoulder-line orientation. Looking back at the original RGB frames showed cases where the left/right landmark assignments switched or where the shoulder points nearly overlapped. The computed angle changed sharply even though the images did not show a corresponding turn.
 
-This public repository reflects an **early prototype stage** of the research.
+I also reviewed pose availability and activity content in **29 MUVIM trials**. Selected sitting segments sometimes had more usable ankle landmarks than short movement segments. In other words, a detected pose—or even high landmark visibility—does not by itself establish that a gait feature is being measured reliably.
 
-Later research work has included additional checks of pose availability, landmark visibility, frame continuity, feature definitions, reference-trial selection, threshold sensitivity, EWMA settings, and correspondence with original RGB frames. Not all of those later validation scripts or research data are included here.
+Those checks changed how I approach the research: **before interpreting a change in a score, I need to confirm what the feature measures and whether the source frames support that interpretation.** These later validation checks were conducted separately; their full scripts and source images are not part of this public prototype.
 
-The labels **A / B / C** used in the prototype are provisional trial-group labels. Their mapping to formal participant IDs has not been confirmed, so this repository does not treat them as verified individual identities.
+## Example from the public prototype
 
-## Technical workflow
+![Percentage of frames above an exploratory reference threshold, by MUVIM trial](figures/prototype_deviation_by_trial.svg)
 
-1. RGB frames
-2. MediaPipe Pose landmark extraction
-3. Frame-continuity checks
-4. Image-space motion feature calculation
-5. Individualized baseline construction with Median / MAD
-6. Standardized deviation calculation
-7. Exploratory combined Deviation Score
-8. Sequential aggregation with EWMA
-9. Feature-level and trial-group comparisons
+This chart uses the saved [trial summary CSV](results/participant_a_deviation_summary.csv). The code uses `NonFall2–5` as reference trials and `NonFall6–10` as evaluation trials. **These are analysis groupings, not a verified past-to-future sequence.** Each percentage refers to valid frames exceeding a prototype threshold, not a probability of falling.
 
-## Motion feature definitions
+The labels A/B/C in other saved outputs are **provisional trial-group names**; their relationship to formal participant IDs has not been confirmed. Two original PNG figures are retained as historical exports and still contain older “Participant” labels. They should not be read as evidence that three individual identities were verified.
 
-The source code keeps the original variable names for reproducibility, but several names should **not** be interpreted as physical measurements.
+## Reproduce the prototype
 
-| Code variable | What the current code actually calculates |
-|---|---|
-| `velocity` | Frame-to-frame 2D displacement of the midpoint of the two hip landmarks in normalized image coordinates. **Not physical walking speed (m/s).** |
-| `acceleration` | Difference between consecutive displacement values when three consecutive pose frames are available. **Not acceleration in m/s².** |
-| `body_turn_rate` | Absolute frame-to-frame change in shoulder-line orientation. **Not angular velocity.** |
-| `symmetry` | Absolute difference between the image y-coordinates of the left and right ankle landmarks. |
-| `foot_offset` | Mean absolute x-offset of both ankle landmarks from the hip-center proxy. |
-| `ankle_distance` | 2D distance between the two ankle landmarks in normalized image coordinates. |
-| `shoulder_hip_angle` | Absolute angular difference between the shoulder line and hip line in the same frame. |
-| `movement_variability` | Rolling standard deviation of the displacement feature within continuous pose-detection segments (window up to 15 frames, minimum 5 valid values). |
-
-Because these features are derived from image coordinates, they can be affected by camera viewpoint, projection, pose-estimation errors, and missing landmarks.
-
-## Prototype individualized baseline
-
-The prototype baseline uses robust statistics:
-
-```text
-robust_sigma = 1.4826 × MAD
-standardized_deviation = |x - median| / robust_sigma
-```
-
-The code then averages available feature-level deviations into a frame-level Deviation Score.
-
-A percentile threshold and EWMA are included as **exploratory analysis mechanisms**, not as validated clinical thresholds.
-
-## Prototype example
-
-The current public example uses:
-
-- `NonFall2–5` as baseline trials
-- `NonFall6–10` as evaluation trials
-
-This split was chosen for prototype analysis. It **does not represent verified chronological progression from past to future**, and the trial numbers should not be interpreted as dates or risk levels.
-
-![Prototype sequential deviation analysis](figure_sequential_deviation.png)
-
-The figure shows the proportion of frames exceeding an exploratory individual-reference threshold in each evaluation trial. It should be interpreted only as deviation from the prototype reference distribution.
-
-### Provisional trial-group comparison
-
-![Exploratory comparison across provisional trial groups](figure_participant_comparison.png)
-
-The figure compares trial-level feature distributions across provisional groups A / B / C. These labels are retained from the prototype code for reproducibility and should not be treated as confirmed participant identities.
-
-## Data-quality and validation lessons
-
-Subsequent research checks highlighted several points that are important when interpreting pose-derived motion features:
-
-- A successful Pose output does not guarantee accurate landmark localization.
-- Missing detections should not be treated as zero motion.
-- Frame continuity matters when calculating displacement-based features.
-- Extreme shoulder-line changes can sometimes be associated with temporary landmark correspondence changes or nearly coincident shoulder points in selected image sequences.
-- Image-space feature values depend on viewpoint and scale and should not be relabeled as physical gait measurements without time and spatial calibration.
-- Mixing different daily activities can change feature distributions even if underlying ability is unchanged, so like-for-like activity comparison is important.
-- Baseline choice, percentile threshold, EWMA parameters, and observation order can affect exploratory results.
-- The relationship between within-person deviation and future fall risk remains a separate validation question.
-
-These findings shifted the research emphasis from simply producing a risk score toward first verifying **what is actually being measured and how reliably it can be interpreted**.
-
-## Current research direction (October 2026)
-
-The research is now organized around three separate questions:
-
-1. **Measurement validity:** Do RGB / pose-derived features represent the intended physical motion, under which viewing and missing-data conditions?
-2. **Within-person comparison:** After defining comparable activities and reliable measurements, can changes from an individual's own reference be quantified?
-3. **Prospective relevance:** Do those changes improve evaluation of future falls in data with appropriately linked follow-up outcomes?
-
-A subsequent inspection of selected MUVIM video segments also found that pose landmarks could be more available during sitting than during short movement segments. **Pose availability alone is therefore not evidence of valid gait measurement.** These exploratory windows were not independently validated gait labels.
-
-**Proposed next validation (not yet performed):** Start with a small self-pilot, recording a simple movement (for example, lateral trunk inclination) using a fixed RGB camera and Xsens DOT inertial sensor(s) at the same time. First verify timestamps, synchronization, sensor orientation, coordinate axes, and units. Then compare genuinely corresponding image-plane and inertial measurements, with error and missing-data reporting. An RGB shoulder-line angle must **not** be equated directly with 3D yaw without the appropriate measurement definition and calibration.
-
-This proposed simultaneous measurement is a **plan**, not a completed experiment or an implemented feature of this public repository. It is intended to test measurement validity, not directly to validate future fall-risk prediction.
-
-## What this project demonstrates
-
-- Python-based data processing and analysis
-- Computer-vision / pose-estimation workflows
-- Feature engineering from time-ordered landmark data
-- Robust statistics using Median / MAD
-- Machine-learning evaluation experience
-- Data-quality inspection and technical debugging
-- Reproducible analysis pipelines
-- Careful interpretation of model-derived measurements
-
-## Repository structure
-
-```text
-.
-├── README.md
-├── README_JA.md
-├── DATASET.md
-├── requirements.txt
-├── figure_sequential_deviation.png
-├── figure_participant_comparison.png
-├── src/
-│   ├── common.py
-│   ├── extract_pose.py
-│   ├── extract_features.py
-│   ├── analyze_individual_deviation.py
-│   └── compare_participants.py
-└── results/
-    ├── participant_a_deviation_summary.csv
-    ├── participant_a_feature_contribution.csv
-    └── participant_abc_comparison.csv
-```
-
-## How to run
-
-**Environment:** Python 3.10+
-
-### 1. Install dependencies
+Python 3.10+ is recommended. Install the packages in [requirements.txt](requirements.txt), obtain access to the MUVIM image data, and provide a local MediaPipe Pose Landmarker model file. The raw dataset is not redistributed here; see [DATASET.md](DATASET.md).
 
 ```bash
 pip install -r requirements.txt
-```
 
-### 2. Extract pose landmarks
-
-```bash
 python src/extract_pose.py \
   --input-root /path/to/ZED_RGB_ADL_COM \
   --output-dir work/pose \
   --model /path/to/pose_landmarker_lite.task \
   --trials 2-10
-```
 
-### 3. Extract motion features
-
-```bash
 python src/extract_features.py \
   --pose-dir work/pose \
   --output-dir work/features \
   --trials 2-10
-```
 
-### 4. Build a prototype individual baseline and evaluate deviation
-
-```bash
 python src/analyze_individual_deviation.py \
   --feature-dir work/features \
   --output-dir work/analysis \
-  --baseline 2-5 \
-  --evaluation 6-10 \
-  --percentile 95 \
-  --alpha 0.4
+  --baseline 2-5 --evaluation 6-10 --percentile 95 --alpha 0.4
 ```
 
-### 5. Compare provisional trial groups
+To inspect the provisional trial groups, run [`compare_participants.py`](src/compare_participants.py) with `--group A:2-10 --group B:71-80 --group C:81-90`. All input paths must refer to locally obtained data.
 
-```bash
-python src/compare_participants.py \
-  --feature-dir work/features \
-  --output-dir work/comparison \
-  --group A:2-10 \
-  --group B:71-80 \
-  --group C:81-90
-```
+## Interpretation and next steps
 
-## Data and privacy
+Several variable names in the prototype are shorthand, not physical units:
 
-This project uses the **MUVIM (Multi Visual Modality Fall Detection Dataset)** for research.
+- `velocity` is **hip-center displacement per frame** in normalized image coordinates, not walking speed in m/s.
+- `acceleration` is a difference between displacement values, not acceleration in m/s².
+- `body_turn_rate` is a shoulder-line angle difference, not angular velocity.
 
-The original videos, RGB frames, and frame-level pose-coordinate files are **not redistributed** in this repository. See [DATASET.md](DATASET.md) for details.
+Camera viewpoint, uncertain frame timing, mixed activities, and missing or unstable landmarks limit what can be inferred from these values. In a separate exploratory analysis of published follow-up datasets, adding within-person change did **not** show a stable improvement in predicting future falls.
 
-## Technologies
+My proposed next measurement check is to record a simple movement with an RGB camera and **Xsens DOT** sensors simultaneously, then compare appropriately matched measurements and missing-data patterns. **That experiment is planned, not completed**, and it is not implemented in this repository.
 
-Python / NumPy / pandas / OpenCV / MediaPipe Pose / scikit-learn / Matplotlib / SHAP / LIME / robust statistics (Median, MAD) / EWMA
+---
 
-## Presentation
-
-**Japan Ergonomics Society, 67th Annual Meeting (May 2026)**  
-Presentation: *Proposal of a Fall-Risk Evaluation Method for Older Adults Using Skeletal Information and Explainable AI*  
-https://pub.confit.atlas.jp/ja/event/jes67/presentation/1B2-03
-
-## Author
-
-**ZHANG MENGYUE (チョウ・ユヅキ)**  
-M.S. Candidate, Graduate School of Science and Engineering, Hosei University
+**ZHANG MENGYUE** · M.S. candidate, Graduate School of Science and Engineering, Hosei University  
+[Japanese README](README_JA.md) · [Dataset and redistribution notes](DATASET.md)
