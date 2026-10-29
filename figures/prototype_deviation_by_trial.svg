@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="425" viewBox="0 0 900 425" role="img" aria-labelledby="title desc">
+<title id="title">Prototype deviation screening</title>
+<desc id="desc">Bar chart of exploratory above-threshold frame percentages in nine trials, grouped into reference trials 2–5 and evaluation trials 6–10. Trial order is not chronological.</desc>
+<rect width="900" height="425" fill="white"/>
+<line x1="75" y1="320" x2="850" y2="320" stroke="#e4e9ef"/>
+<text x="60" y="325" fill="#66788a" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" text-anchor="end">0</text>
+<line x1="75" y1="259.0769230769231" x2="850" y2="259.0769230769231" stroke="#e4e9ef"/>
+<text x="60" y="264.0769230769231" fill="#66788a" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" text-anchor="end">4</text>
+<line x1="75" y1="198.15384615384616" x2="850" y2="198.15384615384616" stroke="#e4e9ef"/>
+<text x="60" y="203.15384615384616" fill="#66788a" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" text-anchor="end">8</text>
+<line x1="75" y1="137.23076923076923" x2="850" y2="137.23076923076923" stroke="#e4e9ef"/>
+<text x="60" y="142.23076923076923" fill="#66788a" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" text-anchor="end">12</text>
+<rect x="98" y="201.60" width="48" height="118.40" rx="2" fill="#778b9e"/>
+<text x="122" y="193.60110645568076" fill="#778b9e" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" text-anchor="middle">7.8</text>
+<text x="122" y="345" fill="#263648" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" text-anchor="middle">2</text>
+<rect x="183" y="258.82" width="48" height="61.18" rx="2" fill="#778b9e"/>
+<text x="207" y="250.8170308184528" fill="#778b9e" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" text-anchor="middle">4.0</text>
+<text x="207" y="345" fill="#263648" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" text-anchor="middle">3</text>
+<rect x="268" y="253.10" width="48" height="66.90" rx="2" fill="#778b9e"/>
+<text x="292" y="245.10057438900776" fill="#778b9e" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" text-anchor="middle">4.4</text>
+<text x="292" y="345" fill="#263648" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" text-anchor="middle">4</text>
+<rect x="353" y="269.57" width="48" height="50.43" rx="2" fill="#778b9e"/>
+<text x="377" y="261.56698930208864" fill="#778b9e" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" text-anchor="middle">3.3</text>
+<text x="377" y="345" fill="#263648" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" text-anchor="middle">5</text>
+<rect x="438" y="150.94" width="48" height="169.06" rx="2" fill="#235c99"/>
+<text x="462" y="142.94156352812158" fill="#235c99" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" text-anchor="middle">11.1</text>
+<text x="462" y="345" fill="#263648" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" text-anchor="middle">6</text>
+<rect x="523" y="270.38" width="48" height="49.62" rx="2" fill="#235c99"/>
+<text x="547" y="262.37593984962405" fill="#235c99" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" text-anchor="middle">3.3</text>
+<text x="547" y="345" fill="#263648" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" text-anchor="middle">7</text>
+<rect x="608" y="177.13" width="48" height="142.87" rx="2" fill="#235c99"/>
+<text x="632" y="169.12729748127978" fill="#235c99" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" text-anchor="middle">9.4</text>
+<text x="632" y="345" fill="#263648" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" text-anchor="middle">8</text>
+<rect x="693" y="172.02" width="48" height="147.98" rx="2" fill="#235c99"/>
+<text x="717" y="164.01793721973095" fill="#235c99" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" text-anchor="middle">9.7</text>
+<text x="717" y="345" fill="#263648" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" text-anchor="middle">9</text>
+<rect x="778" y="167.96" width="48" height="152.04" rx="2" fill="#235c99"/>
+<text x="802" y="159.95904620773274" fill="#235c99" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" text-anchor="middle">10.0</text>
+<text x="802" y="345" fill="#263648" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" text-anchor="middle">10</text>
+<line x1="75" y1="320" x2="850" y2="320" stroke="#67788a"/>
+<line x1="416" y1="121" x2="416" y2="320" stroke="#91a0ad" stroke-dasharray="5 5"/>
+<text x="43" y="34" fill="#15293a" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="600" text-anchor="start">Prototype deviation screening by trial</text>
+<text x="43" y="58" fill="#526579" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" text-anchor="start">Share of pose-valid frames above an exploratory P95 reference threshold</text>
+<rect x="57" y="82" width="12" height="12" rx="2" fill="#778b9e"/>
+<text x="75" y="94" fill="#263648" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" text-anchor="start">Reference trials (2–5)</text>
+<rect x="260" y="82" width="12" height="12" rx="2" fill="#235c99"/>
+<text x="277" y="94" fill="#263648" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" text-anchor="start">Evaluation trials (6–10)</text>
+<text x="463" y="371" fill="#34485B" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="600" text-anchor="middle">MUVIM NonFall trial number</text>
+<text x="43" y="391" fill="#566879" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" text-anchor="start">Trial numbers are not dates. Deviations are not fall probabilities.</text>
+<text x="43" y="411" fill="#758494" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="400" text-anchor="start">Source: results/participant_a_deviation_summary.csv</text>
+</svg>
