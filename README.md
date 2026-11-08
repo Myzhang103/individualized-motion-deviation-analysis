@@ -33,6 +33,18 @@ I also reviewed pose availability and activity content in **29 MUVIM trials**. S
 
 Those checks changed how I approach the research: **before interpreting a change in a score, I need to confirm what the feature measures and whether the source frames support that interpretation.** These later validation checks were conducted separately; their full scripts and source images are not part of this public prototype.
 
+## Current measurement and validation work
+
+I am designing a comparison procedure using the laboratory's **VENUS3D three-dimensional position measurement system** as a reference to evaluate perspective correction in RGB images. Rather than retaining all eight prototype features by default, I am defining the measurements and conditions needed to relate image-derived values to physical distances and speeds.
+
+The design covers three areas:
+
+- **Recording conditions and measurement coverage:** Record the same movement with RGB and VENUS3D, then examine how camera distance and measurement-point height affect image-derived values. The procedure will retain records of unmeasurable intervals as well as intervals with valid measurements.
+- **Evaluation of correction methods:** Compare errors only for quantities expressed in matching units. Keep records used for calibration and parameter selection separate from records used for evaluation.
+- **Correspondence with Xsens DOT:** Define the measured quantities, units, sensor mounting orientation, and time alignment needed for supplementary comparisons of orientation and angular velocity.
+
+VENUS3D markers and MediaPipe landmarks do not necessarily represent identical locations, so defining corresponding points is also part of this work. **The current work is experimental and evaluation-procedure design; accuracy evaluation using synchronized RGB and VENUS3D/DOT recordings has not yet been performed.** Code and results for this validation are not yet included in this repository.
+
 ## Example from the public prototype
 
 ![Percentage of frames above an exploratory reference threshold, by MUVIM trial](figures/prototype_deviation_by_trial.svg)
@@ -76,8 +88,6 @@ Several variable names in the prototype are shorthand, not physical units:
 - `body_turn_rate` is a shoulder-line angle difference, not angular velocity.
 
 Camera viewpoint, uncertain frame timing, mixed activities, and missing or unstable landmarks limit what can be inferred from these values. In a separate exploratory analysis of published follow-up datasets, adding within-person change did **not** show a stable improvement in predicting future falls.
-
-My proposed next measurement check is to record a simple movement with an RGB camera and **Xsens DOT** sensors simultaneously, then compare appropriately matched measurements and missing-data patterns. **That experiment is planned, not completed**, and it is not implemented in this repository.
 
 ---
 
